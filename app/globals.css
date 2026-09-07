@@ -209,6 +209,25 @@ a {
   gap: 14px;
 }
 
+.feed-content {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.2fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.live-panel,
+.jam-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.live-panel {
+  position: sticky;
+  top: 20px;
+}
+
 .feed-header {
   display: flex;
   justify-content: space-between;
@@ -299,5 +318,13 @@ a {
   .page-shell {
     width: min(100% - 20px, 1100px);
     padding-top: 24px;
+  }
+
+  .feed-content {
+    grid-template-columns: 1fr;
+  }
+
+  .live-panel {
+    position: static;
   }
 }

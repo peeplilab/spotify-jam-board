@@ -167,26 +167,6 @@ export default function Home() {
             Spotify status: {spotifyConnected ? "connected" : "not connected"}
           </p>
 
-          {nowPlaying?.connected && nowPlaying.playing && nowPlaying.item ? (
-            <div className="now-playing-card">
-              {nowPlaying.item.image ? (
-                <img src={nowPlaying.item.image} alt={nowPlaying.item.name} />
-              ) : null}
-              <div>
-                <p className="now-playing-label">Now playing</p>
-                <h3>{nowPlaying.item.name}</h3>
-                <p>{nowPlaying.item.artists.join(", ")}</p>
-              </div>
-            </div>
-          ) : (
-            <div className="now-playing-card muted">
-              <div>
-                <p className="now-playing-label">Now playing</p>
-                <h3>{spotifyConnected ? "Nothing is playing right now" : "Connect Spotify to see live listening"}</h3>
-              </div>
-            </div>
-          )}
-
           <label htmlFor="jam-link">Spotify link</label>
           <input
             id="jam-link"
@@ -217,30 +197,56 @@ export default function Home() {
           <span>{jams.length} shared</span>
         </div>
 
-        {jams.length === 0 ? (
-          <div className="empty-state">
-            <p>No jams shared yet.</p>
-            <span>Paste the first Spotify link to start the board.</span>
-          </div>
-        ) : (
-          jams.map((jam) => (
-            <a
-              key={jam.id}
-              href={jam.url}
-              className="jam-card"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div className="jam-pill">Spotify</div>
-              <h3>{jam.note || getShortLabel(jam.url)}</h3>
-              <p>{jam.url}</p>
-              <div className="jam-meta">
-                <span>{new Date(jam.createdAt).toLocaleDateString()}</span>
-                <span>Open in Spotify →</span>
+        <div className="feed-content">
+          <div className="live-panel">
+            {nowPlaying?.connected && nowPlaying.playing && nowPlaying.item ? (
+              <div className="now-playing-card">
+                {nowPlaying.item.image ? (
+                  <img src={nowPlaying.item.image} alt={nowPlaying.item.name} />
+                ) : null}
+                <div>
+                  <p className="now-playing-label">Now playing</p>
+                  <h3>{nowPlaying.item.name}</h3>
+                  <p>{nowPlaying.item.artists.join(", ")}</p>
+                </div>
               </div>
-            </a>
-          ))
-        )}
+            ) : (
+              <div className="now-playing-card muted">
+                <div>
+                  <p className="now-playing-label">Now playing</p>
+                  <h3>{spotifyConnected ? "Nothing is playing right now" : "Connect Spotify to see live listening"}</h3>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="jam-list">
+            {jams.length === 0 ? (
+              <div className="empty-state">
+                <p>No jams shared yet.</p>
+                <span>Paste the first Spotify link to start the board.</span>
+              </div>
+            ) : (
+              jams.map((jam) => (
+                <a
+                  key={jam.id}
+                  href={jam.url}
+                  className="jam-card"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="jam-pill">Spotify</div>
+                  <h3>{jam.note || getShortLabel(jam.url)}</h3>
+                  <p>{jam.url}</p>
+                  <div className="jam-meta">
+                    <span>{new Date(jam.createdAt).toLocaleDateString()}</span>
+                    <span>Open in Spotify →</span>
+                  </div>
+                </a>
+              ))
+            )}
+          </div>
+        </div>
       </section>
     </main>
   );
