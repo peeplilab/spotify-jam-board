@@ -8,6 +8,7 @@ type JamItem = {
   note: string;
   createdAt: string;
   nowPlaying?: TrackSnapshot | null;
+  spotifyConnected?: boolean;
 };
 
 type TrackSnapshot = {
@@ -134,6 +135,7 @@ export default function Home() {
         nowPlaying?.connected && nowPlaying.playing && nowPlaying.item
           ? nowPlaying.item
           : null,
+      spotifyConnected: Boolean(spotifyConnected || nowPlaying?.connected),
     };
 
     setJams((current) => [nextJam, ...current]);
@@ -224,7 +226,11 @@ export default function Home() {
                   ) : (
                     <div className="muted">
                       <p className="now-playing-label">Now playing</p>
-                      <h3>The person who shared this jam hasn&apos;t connected Spotify.</h3>
+                      <h3>
+                        {jam.spotifyConnected
+                          ? "Nothing is playing right now."
+                          : "Sign in with Spotify to share what you&apos;re playing."}
+                      </h3>
                     </div>
                   )}
                 </div>
