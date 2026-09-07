@@ -7,21 +7,18 @@ type JamItem = {
   url: string;
   note: string;
   createdAt: string;
-  nowPlaying?: TrackSnapshot | null;
-};
-
-type TrackSnapshot = {
-  name: string;
-  artists: string[];
-  album: string;
-  image: string;
-  externalUrl: string;
 };
 
 type NowPlayingState = {
   connected: boolean;
   playing: boolean;
-  item?: TrackSnapshot;
+  item?: {
+    name: string;
+    artists: string[];
+    album: string;
+    image: string;
+    externalUrl: string;
+  };
 };
 
 const STORAGE_KEY = "spotify-jam-board-items";
@@ -130,10 +127,6 @@ export default function Home() {
       url: trimmedLink,
       note: trimmedNote,
       createdAt: new Date().toISOString(),
-      nowPlaying:
-        nowPlaying?.connected && nowPlaying.playing && nowPlaying.item
-          ? nowPlaying.item
-          : null,
     };
 
     setJams((current) => [nextJam, ...current]);
@@ -156,10 +149,13 @@ export default function Home() {
         <form className="share-form" onSubmit={handleSubmit}>
           <div className="connect-row">
             <a className="connect-button" href="/api/auth/spotify">
-              {spotifyConnected ? "Reconnect Spotify" : "Sign in with Spotify"}
+              {spotifyConnected ? "Reconnect Spotify" : "Connect Spotify"}
             </a>
-            {spotifyConnected ? <span className="spotify-status">Spotify connected</span> : null}
           </div>
+
+          <p className="now-playing-label">
+            Spotify status: {spotifyConnected ? "connected" : "not connected"}
+          </p>
 
           <label htmlFor="jam-link">Spotify link</label>
           <input
@@ -192,41 +188,40 @@ export default function Home() {
         </div>
 
         <div className="jam-list">
-          {jams.length === 0 ? (
-            <div className="empty-state">
-              <p>No jams shared yet.</p>
-              <span>Paste the first Spotify link to start the board.</span>
+          {nowPlaying?.connected && nowPlaying.playing && nowPlaying.item ? (
+            <div className="jam-card now-playing-card">
+              {nowPlaying.item.image ? (
+                <img src={nowPlaying.item.image} alt={nowPlaying.item.name} />
+              ) : null}
+              <div>
+                <p className="now-playing-label">Now playing</p>
+                <h3>{nowPlaying.item.name}</h3>
+                <p>{nowPlaying.item.artists.join(", ")}</p>
+              </div>
             </div>
           ) : (
-            jams.map((jam) => (
-              <a
-                key={jam.id}
-                href={jam.url}
-                className="jam-card jam-card-with-now-playing"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div className="now-playing-inline">
-                  {jam.nowPlaying ? (
-                      <>
-                        {jam.nowPlaying.image ? (
-                          <img src={jam.nowPlaying.image} alt={jam.nowPlaying.name} />
-                        ) : null}
-                        <div>
-                          <p className="now-playing-label">Now playing</p>
-                          <h3>{jam.nowPlaying.name}</h3>
-                          <p>{jam.nowPlaying.artists.join(", ")}</p>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="muted">
-                        <p className="now-playing-label">Now playing</p>
-                        <h3>The person who shared this jam hasn&apos;t connected Spotify.</h3>
-                      </div>
-                  )}
-                </div>
+            <div className="jam-card now-playing-card muted">
+              <div>
+                <p className="now-playing-label">Now playing</p>
+                <h3>{spotifyConnected ? "Nothing is playing right now" : "Connect Spotify to see live listening"}</h3>
+              </div>
+            </div>
+          )}
 
-                <div className="jam-card-details">
+          {jams.length === 0 ? (
+              <div className="empty-state">
+                <p>No jams shared yet.</p>
+                <span>Paste the first Spotify link to start the board.</span>
+              </div>
+            ) : (
+              jams.map((jam) => (
+                <a
+                  key={jam.id}
+                  href={jam.url}
+                  className="jam-card"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <div className="jam-pill">Spotify</div>
                   {jam.note ? <h3>{jam.note}</h3> : null}
                   <p>{jam.url}</p>
@@ -234,9 +229,8 @@ export default function Home() {
                     <span>{new Date(jam.createdAt).toLocaleDateString()}</span>
                     <span>Open in Spotify →</span>
                   </div>
-                </div>
-              </a>
-            ))
+                </a>
+              ))
           )}
         </div>
       </section>

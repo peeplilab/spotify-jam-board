@@ -126,14 +126,7 @@ a {
 
 .connect-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
   justify-content: flex-end;
-}
-
-.spotify-status {
-  color: var(--muted);
-  font-size: 0.76rem;
 }
 
 .connect-button {
@@ -149,19 +142,21 @@ a {
   text-decoration: none;
 }
 
-.now-playing-inline {
+.now-playing-card {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0;
-  padding-right: 18px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.now-playing-inline.muted {
+.now-playing-card.muted {
   opacity: 0.85;
 }
 
-.now-playing-inline img {
+.now-playing-card img {
   width: 56px;
   height: 56px;
   border-radius: 12px;
@@ -176,12 +171,12 @@ a {
   margin-bottom: 6px;
 }
 
-.now-playing-inline h3 {
+.now-playing-card h3 {
   font-size: 1rem;
   margin-bottom: 4px;
 }
 
-.now-playing-inline p {
+.now-playing-card p {
   color: var(--muted);
   font-size: 0.82rem;
 }
@@ -262,20 +257,6 @@ a {
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.jam-card-with-now-playing {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 18px;
-}
-
-.jam-card-details {
-  min-width: 0;
-}
-
-.jam-card-with-now-playing .now-playing-inline {
-  border-right: 1px solid var(--border);
-}
-
 .jam-card:hover {
   transform: translateY(-2px);
   border-color: rgba(30, 215, 96, 0.7);
@@ -324,18 +305,6 @@ a {
   .page-shell {
     width: min(100% - 20px, 1100px);
     padding-top: 24px;
-  }
-
-  .jam-card-with-now-playing {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .jam-card-with-now-playing .now-playing-inline {
-    padding-right: 0;
-    padding-bottom: 14px;
-    border-right: 0;
-    border-bottom: 1px solid var(--border);
   }
 
 }
